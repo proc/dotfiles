@@ -1,7 +1,8 @@
 call pathogen#infect()
 syntax on
 filetype plugin indent on
-:colorscheme jellybeans
+colorscheme jellybeans
+set background=dark
 set cf  " Enable error files & error jumping.
 set clipboard+=unnamed  " Yanks go on clipboard instead.
 set history=256  " Number of things to remember in history.
@@ -26,6 +27,7 @@ set smarttab
 set expandtab
 set cursorline              " highlight current line
 set ttyfast                 " better scrolling 
+set nobackup
 
 " Visual
 set showmatch  " Show matching brackets.
@@ -45,13 +47,17 @@ set laststatus=2  " Always show status line.
 " set mouse=a  " Mouse in all modes
 
 " Backups & Files
-set backup                     " Enable creation of backup file.
-set backupdir=~/.vim/backups " Where backups will go.
-set directory=~/.vim/tmp     " Where temporary files will go.
+" set backup                     " Enable creation of backup file.
+"set backupdir=~/.vim/backups " Where backups will go.
+" set directory=~/.vim/tmp     " Where temporary files will go.
+set nobackup       "no backup files
+set nowritebackup  "only in case you don't want a backup file while editing
+set noswapfile     "no swap files
 
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 " autocmd vimenter * NERDTree
 " autocmd vimenter * if !argc() | NERDTree | endif
+autocmd vimenter * IndentGuidesEnable
 
 set hidden
 
@@ -81,6 +87,7 @@ if exists(":Tabularize")
   nmap <Leader>a: :Tabularize /:\zs<CR>
   vmap <Leader>a: :Tabularize /:\zs<CR>
 endif
+nmap <leader>e :e! ~/.vimrc<CR>
 
 " Rails rockets
 function IndentV()
@@ -89,7 +96,8 @@ function IndentV()
 endfunction
 
 map <Leader>iv :call IndentV()<cr>
-
+map <leader>t :CommandTFlush<cr>\|:CommandT<cr>
+map <leader>T :CommandTFlush<cr>\|:CommandT %%<cr>
 
 " highlight hidden char
 
@@ -99,4 +107,8 @@ highlight SpecialKey ctermbg=darkgreen guibg=lightgreen
 " turn off mvim toolbar
 set go-=T
 
-au VimEnter * NERDTreeFind
+" Yank buffer
+map <D-y> :YRShow<CR>
+" au VimEnter * NERDTreeFind
+
+:hi ModeMsg term=reverse cterm=reverse gui=reverse 
