@@ -1,7 +1,7 @@
 call pathogen#infect()
 syntax on
 filetype plugin indent on
-colorscheme jellybeans
+colorscheme smyck
 set background=dark
 set cf  " Enable error files & error jumping.
 set clipboard+=unnamed  " Yanks go on clipboard instead.
@@ -12,7 +12,7 @@ set nu  " Line numbers on
 set nowrap  " Line wrapping off
 set timeoutlen=250  " Time to wait after ESC (default causes an annoying delay)
 " colorscheme vividchalk  " Uncomment this to set a default theme
- 
+
 " Formatting (some of these are for coding in C and C++)
 set ts=2  " Tabs are 2 spaces
 set bs=2  " Backspace over everything in insert mode
@@ -26,9 +26,11 @@ set autoindent
 set smarttab
 set expandtab
 set cursorline              " highlight current line
-set ttyfast                 " better scrolling 
+set ttyfast                 " better scrolling
 set nobackup
-
+set shortmess=atI
+nnoremap <Leader>u :GundoToggle<CR>
+" set foldmethod=syntax
 " Visual
 set showmatch  " Show matching brackets.
 set mat=5  " Bracket blinking.
@@ -41,7 +43,7 @@ set visualbell  " No blinking .
 set vb
 set noerrorbells  " No noise.
 set laststatus=2  " Always show status line.
- 
+
 " gvim specific
 " set mousehide  " Hide mouse after chars typed
 " set mouse=a  " Mouse in all modes
@@ -62,7 +64,7 @@ autocmd vimenter * IndentGuidesEnable
 set hidden
 
 if has('autocmd')
-  autocmd BufWritePost vimrc source ~/.vimrc
+  autocmd bufwritepost .vimrc source ~/.vimrc
 endif
 
 " Commenting
@@ -81,21 +83,12 @@ vmap <D-]> >gv
 let mapleader=','
 
 " Tabularize
-if exists(":Tabularize")
-  nmap <Leader>a= :Tabularize /=<CR>
-  vmap <Leader>a= :Tabularize /=<CR>
-  nmap <Leader>a: :Tabularize /:\zs<CR>
-  vmap <Leader>a: :Tabularize /:\zs<CR>
-endif
+nmap <Leader>] :Tabularize /=><CR>
+vmap <Leader>] :Tabularize /=><CR>
+nmap <Leader>a: :Tabularize /:\zs<CR>
+vmap <Leader>a: :Tabularize /:\zs<CR>
 nmap <leader>e :e! ~/.vimrc<CR>
 
-" Rails rockets
-function IndentV()
-  Tabularize /^[^:]*\zs:/r1c0l0
-  Tabularize /^[^=>]*\zs=>/l1
-endfunction
-
-map <Leader>iv :call IndentV()<cr>
 map <leader>t :CommandTFlush<cr>\|:CommandT<cr>
 map <leader>T :CommandTFlush<cr>\|:CommandT %%<cr>
 
@@ -111,4 +104,46 @@ set go-=T
 map <D-y> :YRShow<CR>
 " au VimEnter * NERDTreeFind
 
-:hi ModeMsg term=reverse cterm=reverse gui=reverse 
+:hi ModeMsg term=reverse cterm=reverse gui=reverse
+
+" highlight extra whitespace
+highlight ExtraWhitespace ctermbg=red guibg=red
+au ColorScheme * highlight ExtraWhitespace guibg=red
+au BufEnter * match ExtraWhitespace /\s\+$/
+au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+au InsertLeave * match ExtraWhiteSpace /\s\+$/
+
+set iskeyword-=_
+
+" MULTIPURPOSE TAB KEY
+" Indent if we're at the beginning of a line. Else, do completion.
+function! InsertTabWrapper()
+    let col = col('.') - 1
+    if !col || getline('.')[col - 1] !~ '\k'
+        return "\<tab>"
+    else
+        return "\<c-p>"
+    endif
+endfunction
+inoremap <tab> <c-r>=InsertTabWrapper()<cr>
+inoremap <s-tab> <c-n>
+
+" Remove all trailing whitespace from the file
+nmap <leader>c :%s/\s\+$//g<CR>
+
+if executable("ack")
+  set grepprg=ack\ -H\ --nogroup\ --nocolor\ --ignore-dir=tmp\ --ignore-dir=public/assets
+endif
+
+nnoremap <F3> :NumbersToggle<CR>
+:imap ii <Esc>
+
+set runtimepath+=~/.vim/after/syntax
+
+map <silent> <PageUp> 1000<C-U>
+map <silent> <PageDown> 1000<C-D>
+imap <silent> <PageUp> 1000<C-O><C-U>
+imap <silent> <PageDown> 1000<C-O><C-D>
+map <silent> - 1000<C-U>
+map <silent> <Space> 1000<C-D>
+set nostartofline
