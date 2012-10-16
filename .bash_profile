@@ -30,6 +30,9 @@ alias grr='git remote rm'
 alias gpu='git pull'
 alias gcl='git clone'
 
+#ssh tunnel
+alias tunnel='ssh vagrant@10.10.10.10 -L 3306:127.0.0.1:3306 -N'
+
 export EDITOR=vim
 export PS1="\[\033[0;36m\]\u@\h\[\033[1;35m\] \w\n\[\033[1;33m\]\`ruby -e \"print (%x{git branch 2> /dev/null}.split('\n').grep(/^\*/).first || '').gsub(/^\* (.+)$/, '(\1) ')\"\`\[\033[37m\]$\[\033[00m\] "
 eval "$(rbenv init -)"

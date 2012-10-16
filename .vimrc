@@ -1,6 +1,9 @@
 call pathogen#infect()
+filetype off
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
 syntax on
-filetype plugin indent on
+" filetype plugin indent on
 colorscheme smyck
 set background=dark
 set cf  " Enable error files & error jumping.
@@ -12,6 +15,12 @@ set nu  " Line numbers on
 set nowrap  " Line wrapping off
 set timeoutlen=250  " Time to wait after ESC (default causes an annoying delay)
 " colorscheme vividchalk  " Uncomment this to set a default theme
+
+
+" Turn off case sensitivity for lower case searches, and turn on case sensitivity
+" for searches with at least 1 uppercase character
+set ignorecase
+set smartcase
 
 " Formatting (some of these are for coding in C and C++)
 set ts=2  " Tabs are 2 spaces
@@ -147,3 +156,28 @@ imap <silent> <PageDown> 1000<C-O><C-D>
 map <silent> - 1000<C-U>
 map <silent> <Space> 1000<C-D>
 set nostartofline
+
+" Bundles
+Bundle 'gmarik/vundle'
+Bundle 'vim-scripts/YankRing.vim'
+
+set path+=/path/to/your/rails-application/app/**
+set path+=/path/to/your/rails-application/lib/**
+set suffixesadd=.rb
+set includeexpr+=substitute(v:fname,'s$','','g')
+" or you can add substitution pattern s/ies$/y/g, s/ves$/f/g like this:
+" set includeexpr+=substitute(substitute(substitute(v:fname,'s$','','g'),'ie$','y','g'),'ve$','f','g')
+
+" MULTIPURPOSE TAB KEY
+" Indent if we're at the beginning of a line. Else, do completion.
+function! InsertTabWrapper()
+    let col = col('.') - 1
+    if !col || getline('.')[col - 1] !~ '\k'
+        return "\<tab>"
+    else
+        return "\<c-p>"
+    endif
+endfunction
+inoremap <tab> <c-r>=InsertTabWrapper()<cr>
+inoremap <s-tab> <c-n>
+nmap tgf <C-w>gf
