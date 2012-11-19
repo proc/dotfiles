@@ -72,9 +72,6 @@ autocmd vimenter * IndentGuidesEnable
 
 set hidden
 
-if has('autocmd')
-  autocmd bufwritepost .vimrc source ~/.vimrc
-endif
 
 " Commenting
 map <F5> :TComment<CR>
@@ -140,6 +137,9 @@ inoremap <s-tab> <c-n>
 " Remove all trailing whitespace from the file
 nmap <leader>c :%s/\s\+$//g<CR>
 
+" easy save
+nnoremap <silent> <leader>s :if expand("%") == ""<CR>browse confirm w<CR>else<CR>confirm w<CR>endif<CR>
+
 if executable("ack")
   set grepprg=ack\ -H\ --nogroup\ --nocolor\ --ignore-dir=tmp\ --ignore-dir=public/assets
 endif
@@ -181,3 +181,28 @@ endfunction
 inoremap <tab> <c-r>=InsertTabWrapper()<cr>
 inoremap <s-tab> <c-n>
 nmap tgf <C-w>gf
+" Remap CMD+S to :w
+if has("gui_macvim")
+  macmenu &File.Save key=<nop>
+  :imap <D-s> <Esc><D-s>
+  nnoremap <silent> <D-s> :if expand("%") == ""<CR>browse confirm w<CR>else<CR>confirm w<CR>endif<CR>
+endif
+
+" Abbreviate messages
+set shortmess=a
+
+" Add more space for commands
+set cmdheight=2
+
+nnoremap <silent> <C-s> :call RelatedSpecVOpen()<CR>
+nnoremap <silent> ,<C-s> :call RelatedSpecOpen()<CR>
+
+" Cmd-Shift-R for RSpec
+nmap <silent> <D-R> :call RunRspecCurrentFileConque()<CR>
+" Cmd-Shift-L for RSpec Current Line
+nmap <silent> <D-L> :call RunRspecCurrentLineConque()<CR>
+" ,Cmd-R for Last conque command
+nmap <silent> ,<D-r> :call RunLastConqueCommand()<CR>
+
+let g:ConqueTerm_InsertOnEnter = 0
+let g:ConqueTerm_CWInsert = 1
