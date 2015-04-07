@@ -1,0 +1,17 @@
+---
+  tasks:
+    default:
+      links:
+        -
+          - ".nvimrc"
+          - "nvimrc"
+        -
+          - ".vimrc"
+          - "vimrc"
+        -
+          - ".tmux.conf"
+          - "tmux.conf"
+        -
+          - ".emacs"
+          - "emacs"
+
